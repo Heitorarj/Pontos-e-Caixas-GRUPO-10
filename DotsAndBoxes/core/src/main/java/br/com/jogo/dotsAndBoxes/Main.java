@@ -7,29 +7,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-/**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
- * platforms.
- */
+
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
-    private Texture image;
-    private Dot dot;
-
+    private Map map;
+    
     @Override
     public void create() {
         batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
-        dot = new Dot();
+        map = new Map();
+        map.createMap();
     }
 
     @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         batch.begin();
-        batch.draw(image, 140, 210);
+        map.renderMap();
 
-        dot.renderDot();
 
         batch.end();
     }
@@ -37,8 +32,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        image.dispose();
+        map.disposeMap();
 
-        dot.disposeDot();
     }
 }
