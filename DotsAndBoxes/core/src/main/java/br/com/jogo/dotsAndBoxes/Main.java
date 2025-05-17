@@ -14,11 +14,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture image;
+    private Dot dot;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         image = new Texture("libgdx.png");
+        dot = new Dot();
     }
 
     @Override
@@ -26,6 +28,9 @@ public class Main extends ApplicationAdapter {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         batch.begin();
         batch.draw(image, 140, 210);
+
+        dot.renderDot();
+
         batch.end();
     }
 
@@ -33,5 +38,7 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         image.dispose();
+
+        dot.disposeDot();
     }
 }
