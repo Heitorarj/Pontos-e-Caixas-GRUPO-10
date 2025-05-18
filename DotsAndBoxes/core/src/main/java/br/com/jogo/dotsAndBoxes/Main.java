@@ -7,31 +7,39 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private Map map;
-    
+    private Menu menu;
+
     @Override
     public void create() {
         batch = new SpriteBatch();
         map = new Map();
         map.createMap();
+        menu = new Menu();
+        menu.createMenu();
     }
 
     @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        batch.begin();
-        map.renderMap();
-        map.getMenu().renderMenu(batch);
-        batch.end();
+
+        if (menu.isInMenu()) {
+            menu.updateMenu();
+            menu.renderMenu(batch);
+        } else {
+            batch.begin();
+            map.renderMap();
+            batch.end();
+        }
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         map.disposeMap();
-
+        menu.disposeMenu();
     }
+
 }
