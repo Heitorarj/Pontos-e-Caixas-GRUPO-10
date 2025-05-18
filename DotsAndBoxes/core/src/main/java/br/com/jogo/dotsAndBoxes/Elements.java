@@ -1,5 +1,6 @@
 package br.com.jogo.dotsAndBoxes;
 
+
 public class Elements {
     private float positionX, positionY;
 
@@ -14,5 +15,13 @@ public class Elements {
 
     public void setPositionY(float positionY){
         this.positionY = positionY;
+    }
+    
+    public float getPositionX(){
+        return this.positionX;
+    }
+
+    public float getPositionY(){
+        return this.positionY;
     }
 }
