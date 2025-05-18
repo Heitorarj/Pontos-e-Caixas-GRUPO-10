@@ -21,7 +21,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        ScreenUtils.clear(0.36f, 0.45f, 0.49f, 1f); //93, 115, 126
         batch.begin();
         map.renderMap();
 

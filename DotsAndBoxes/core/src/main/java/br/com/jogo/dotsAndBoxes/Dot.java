@@ -12,7 +12,7 @@ public class Dot extends Elements{
     public Dot() {
         shape = new ShapeRenderer();
         radius = 0f;
-        color = Color.BLACK;
+        color = Color.WHITE;
     }
 
     public void createDot(float positionX, float positionY, float radius){

@@ -12,15 +12,14 @@ public class Line extends Elements {
     
     public Line() {
         shape = new ShapeRenderer();
-        keepPositionX = 0f;
         keepPositionY = 0f;
-        color = Color.BLACK; 
+        keepPositionX = 0f;
+        color = Color.WHITE; 
     }
 
-    public void createLine(float positionX, float positionY, float positionX2, float positionY2){
+    public void createLine(float positionX, float positionX2, float positionY, float positionY2){
         setPositionX(positionX);
         keepPositionX = getPositionX();
-
         setPositionY(positionY);
         keepPositionY = getPositionY();
 
