@@ -47,7 +47,7 @@ public class Menu {
     public void renderMenu(SpriteBatch batch) {
         if (inMenu) {
             batch.begin();
-            font.setColor(Color.WHITE);
+            font.setColor(Color.BROWN);
             font.getData().setScale(2);
             font.draw(batch, title, titleX, titleY);
             font.getData().setScale(1);

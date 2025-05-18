@@ -27,7 +27,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        ScreenUtils.clear(0.36f, 0.45f, 0.49f, 1f); // 93, 115, 126
+        ScreenUtils.clear(0.99f, 0.94f, 0.84f, 1f); // 93, 115, 126
 
         update();
 
@@ -44,8 +44,8 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        map.disposeMap();
         menu.disposeMenu();
+        map.disposeMap();
     }
 
 }

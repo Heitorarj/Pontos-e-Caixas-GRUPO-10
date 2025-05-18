@@ -8,15 +8,16 @@ public class Line extends Elements {
     private ShapeRenderer shape;
     private float keepPositionX, keepPositionY;
     private Color color;
-    private boolean canClick, isHovered;
+    private boolean canClick, isHovered, clicked;
 
     public Line() {
         shape = new ShapeRenderer();
         keepPositionY = 0f;
         keepPositionX = 0f;
-        color = Color.WHITE;
+        color = Color.DARK_GRAY;
         canClick = true;
         isHovered = false;
+        clicked = false;
     }
 
     public void createLine(float positionX, float positionX2, float positionY, float positionY2) {
@@ -33,9 +34,9 @@ public class Line extends Elements {
         shape.begin(ShapeType.Line);
 
         if (isHovered && canClick) {
-            shape.setColor(Color.YELLOW); // cor de destaque ao passar o mouse
+            shape.setColor(Color.SKY); // cor de destaque ao passar o mouse
         } else {
-            shape.setColor(color); // cor normal
+            shape.setColor(color);
         }
 
         shape.line(keepPositionX, keepPositionY, getPositionX(), getPositionY());
@@ -60,6 +61,14 @@ public class Line extends Elements {
 
     public void setColor(Color newColor) {
         this.color = newColor;
+    }
+
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
+    public boolean getClicked() {
+        return clicked;
     }
 
     public boolean isClicked(float mouseX, float mouseY) {

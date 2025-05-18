@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-public class Dot extends Elements{
+public class Dot extends Elements {
     private ShapeRenderer shape;
     private float radius;
     private Color color;
@@ -12,17 +12,16 @@ public class Dot extends Elements{
     public Dot() {
         shape = new ShapeRenderer();
         radius = 0f;
-        color = Color.WHITE;
+        color = Color.DARK_GRAY;
     }
 
-    public void createDot(float positionX, float positionY, float radius){
+    public void createDot(float positionX, float positionY, float radius) {
         setPositionX(positionX);
         setPositionY(positionY);
-
         this.radius = radius;
     }
 
-    public void renderDot(){
+    public void renderDot() {
         shape.begin(ShapeType.Filled);
         shape.setColor(color);
 
@@ -30,8 +29,8 @@ public class Dot extends Elements{
 
         shape.end();
     }
-    
-    public void disposeDot(){
+
+    public void disposeDot() {
         shape.dispose();
     }
 }
