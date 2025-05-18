@@ -1,5 +1,8 @@
 package br.com.jogo.dotsAndBoxes;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+
 public class Map {
 
     private Dot dots[][] = new Dot[6][6];
@@ -44,6 +47,49 @@ public class Map {
         }
 
     }
+
+    public void updateMap() {
+    float mouseX = Gdx.input.getX();
+    float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+    
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 5; j++) {
+            Line line = lines[i][j];
+            line.setHovered(line.getCanClick() && line.isClicked(mouseX, mouseY));
+        }
+    }
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 6; j++) {
+            Line line = horizontalLines[i][j];
+            line.setHovered(line.getCanClick() && line.isClicked(mouseX, mouseY));
+        }
+    }
+
+    if (Gdx.input.justTouched()) {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 5; j++) {
+                Line line = lines[i][j];
+                if (line.getCanClick() && line.isClicked(mouseX, mouseY)) {
+                    line.setCanClick(false);
+                    line.setColor(Color.RED);
+                    return;
+                }
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 6; j++) {
+                Line line = horizontalLines[i][j];
+                if (line.getCanClick() && line.isClicked(mouseX, mouseY)) {
+                    line.setCanClick(false);
+                    line.setColor(Color.RED);
+                    return;
+                }
+            }
+        }
+    }
+}
+
 
     public void renderMap() {
         for (int i = 0; i < 6; i++) {
