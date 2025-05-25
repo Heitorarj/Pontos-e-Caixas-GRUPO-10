@@ -27,17 +27,14 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        ScreenUtils.clear(0.99f, 0.94f, 0.84f, 1f); // 93, 115, 126
-
+        ScreenUtils.clear(0.99f, 0.94f, 0.84f, 1f);
         update();
 
         if (menu.isInMenu()) {
             menu.updateMenu();
             menu.renderMenu(batch);
         } else {
-            batch.begin();
             map.renderMap();
-            batch.end();
         }
     }
 

@@ -2,13 +2,15 @@ package br.com.jogo.dotsAndBoxes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Map {
 
     private Dot dots[][] = new Dot[6][6];
-    private Line lines[][] = new Line[6][5];
-    private Line horizontalLines[][] = new Line[5][6];
+    private Line lines[][] = new Line[6][6];
+    private Line horizontalLines[][] = new Line[6][6];
     private Square squares[][] = new Square[5][5];
+    private ShapeRenderer shape = new ShapeRenderer();
     float mouseX, mouseY;
 
     private void inicializeDots() {
@@ -21,30 +23,15 @@ public class Map {
 
     private void inicializeLines() {
         for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 5; j++) {
-                lines[i][j] = new Line();
-            }
-        }
-        for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 6; j++) {
+                lines[i][j] = new Line();
                 horizontalLines[i][j] = new Line();
             }
         }
+
     }
 
-    private void inicializeSquares() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                Line top = horizontalLines[i][j];
-                Line bottom = horizontalLines[i + 1][j];
-                Line left = lines[j][i];
-                Line right = lines[j][i + 1];
-
-                squares[i][j] = new Square(top, bottom, left, right);
-            }
-        }
-    }
-
+    
     private void createDots() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
@@ -52,19 +39,32 @@ public class Map {
             }
         }
     }
-
+    
     private void createLines() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 lines[i][j].createLine(dots[i][j].getPositionX(), dots[i][j].getPositionX(), dots[i][j].getPositionY(),
-                        dots[i][j].getPositionY() + 50f);
+                dots[i][j+1].getPositionY());
             }
         }
-
+        
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 6; j++) {
-                horizontalLines[i][j].createLine(dots[i][j].getPositionX(), dots[i][j].getPositionX() + 70f,
-                        dots[i][j].getPositionY(), dots[i][j].getPositionY());
+                horizontalLines[i][j].createLine(dots[i][j].getPositionX(), dots[i+1][j].getPositionX(),
+                dots[i][j].getPositionY(), dots[i][j].getPositionY());
+            }
+        }
+    }
+    
+    private void createSquares() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                Line top = horizontalLines[i][j];
+                Line bottom = horizontalLines[i + 1][j];
+                Line left = lines[j][i];
+                Line right = lines[j][i + 1];
+
+                squares[i][j] = new Square(top, bottom, left, right);
             }
         }
     }
@@ -98,10 +98,10 @@ public class Map {
         if (Gdx.input.justTouched()) {
             for (int i = 0; i < 6; i++) {
                 for (int j = 0; j < 5; j++) {
-                    Line line = lines[i][j];
-                    if (line.getCanClick() && line.isClicked(getMouseInputX(), getMouseInputY())) {
-                        line.setCanClick(false);
-                        line.setColor(Color.BLUE);
+                    Line vertical = lines[i][j];
+                    if (vertical.getCanClick() && vertical.isClicked(getMouseInputX(), getMouseInputY())) {
+                        vertical.setCanClick(false);
+                        vertical.setColor(Color.BLUE);
                         return;
                     }
                 }
@@ -109,10 +109,10 @@ public class Map {
 
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 6; j++) {
-                    Line line = horizontalLines[i][j];
-                    if (line.getCanClick() && line.isClicked(getMouseInputX(), getMouseInputY())) {
-                        line.setCanClick(false);
-                        line.setColor(Color.RED);
+                    Line horizontal = horizontalLines[i][j];
+                    if (horizontal.getCanClick() && horizontal.isClicked(getMouseInputX(), getMouseInputY())) {
+                        horizontal.setCanClick(false);
+                        horizontal.setColor(Color.BLUE);
                         return;
                     }
                 }
@@ -142,6 +142,23 @@ public class Map {
         }
     }
 
+    private void updateSquares(){
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                squares[i][j].updateSquare();
+            }
+        }
+
+    }
+
+    private void renderSquares(){
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                squares[i][j].render(shape);
+            }
+        }
+    }
+    
     private void disposeDots() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
@@ -149,7 +166,7 @@ public class Map {
             }
         }
     }
-
+    
     private void disposeLines() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
@@ -166,25 +183,28 @@ public class Map {
     public Map() {
         inicializeDots();
         inicializeLines();
-        inicializeSquares();
     }
 
     public void createMap() {
         createDots();
         createLines();
+        createSquares();
     }
 
     public void updateMap() {
         linesAreHovered();
         linesGetClicked();
+        updateSquares();
     }
 
     public void renderMap() {
         renderLines();
         renderDots();
+        renderSquares();
     }
 
     public void disposeMap() {
+        shape.dispose();
         disposeLines();
         disposeDots();
     }

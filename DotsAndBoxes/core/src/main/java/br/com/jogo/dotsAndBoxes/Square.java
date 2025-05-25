@@ -1,15 +1,14 @@
 package br.com.jogo.dotsAndBoxes;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+
 public class Square {
     private Line top, bottom, left, right;
     private boolean completed;
 
     Square() {
-        this.top = null;
-        this.bottom = null;
-        this.right = null;
-        this.left = null;
-        this.completed = false;
     }
 
     Square(Line top, Line bottom, Line left, Line right) {
@@ -32,9 +31,13 @@ public class Square {
         return false;
     }
 
-    public void render() {
+    public void render(ShapeRenderer shape) {
         if (completed) {
-            
+            shape.begin(ShapeType.Filled);
+            shape.setColor(Color.BLACK);
+            shape.rect(left.getPositionX(), bottom.getPositionY(), 70, 50);
+            shape.end();
         }
     }
+
 }

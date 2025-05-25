@@ -28,6 +28,7 @@ public class Line extends Elements {
 
         setPositionX(positionX2);
         setPositionY(positionY2);
+
     }
 
     public void renderLine() {
