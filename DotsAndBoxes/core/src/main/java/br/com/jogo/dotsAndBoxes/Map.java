@@ -1,5 +1,8 @@
 package br.com.jogo.dotsAndBoxes;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -11,7 +14,9 @@ public class Map {
     private Line horizontalLines[][] = new Line[6][6];
     private Square squares[][] = new Square[5][5];
     private ShapeRenderer shape = new ShapeRenderer();
-    float mouseX, mouseY;
+    private float mouseX, mouseY;
+    private Player humanPlayer = new Player(1, 0, true);
+    private Player computerPlayer = new Player(2, 0, false);
 
     private void inicializeDots() {
         for (int i = 0; i < 6; i++) {
@@ -31,7 +36,6 @@ public class Map {
 
     }
 
-    
     private void createDots() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
@@ -39,30 +43,33 @@ public class Map {
             }
         }
     }
-    
+
     private void createLines() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 lines[i][j].createLine(dots[i][j].getPositionX(), dots[i][j].getPositionX(), dots[i][j].getPositionY(),
-                dots[i][j+1].getPositionY());
+                        dots[i][j + 1].getPositionY());
             }
         }
-        
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 6; j++) {
-                horizontalLines[i][j].createLine(dots[i][j].getPositionX(), dots[i+1][j].getPositionX(),
-                dots[i][j].getPositionY(), dots[i][j].getPositionY());
+                horizontalLines[i][j].createLine(dots[i][j].getPositionX(), dots[i + 1][j].getPositionX(),
+                        dots[i][j].getPositionY(), dots[i][j].getPositionY());
             }
         }
     }
-    
+
     private void createSquares() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                Line top = horizontalLines[i][j];
-                Line bottom = horizontalLines[i + 1][j];
-                Line left = lines[j][i];
-                Line right = lines[j][i + 1];
+                // Linhas horizontais (top e bottom)
+                Line top = horizontalLines[i][j + 1]; // Linha acima do quadrado
+                Line bottom = horizontalLines[i][j]; // Linha abaixo do quadrado
+
+                // Linhas verticais (left e right)
+                Line left = lines[i][j]; // Linha à esquerda do quadrado
+                Line right = lines[i + 1][j]; // Linha à direita do quadrado
 
                 squares[i][j] = new Square(top, bottom, left, right);
             }
@@ -94,29 +101,87 @@ public class Map {
         }
     }
 
+    private void verifyLines() {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 5; j++) {
+                Line vertical = lines[i][j];
+                if (vertical.getCanClick() && vertical.isClicked(getMouseInputX(), getMouseInputY())) {
+                    vertical.setCanClick(false);
+                    vertical.setClicked(true);
+                    vertical.setColor(Color.BLUE);
+                    humanPlayer.setCanPlay(false);
+                    computerPlayer.setCanPlay(true);
+                    return;
+                }
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 6; j++) {
+                Line horizontal = horizontalLines[i][j];
+                if (horizontal.getCanClick() && horizontal.isClicked(getMouseInputX(), getMouseInputY())) {
+                    horizontal.setCanClick(false);
+                    horizontal.setClicked(true);
+                    horizontal.setColor(Color.BLUE);
+                    humanPlayer.setCanPlay(false);
+                    computerPlayer.setCanPlay(true);
+                    return;
+                }
+            }
+        }
+
+    }
+
+    private ArrayList<Line> getAvailableLines() {
+        ArrayList<Line> availableLines = new ArrayList<>();
+
+        // Adiciona linhas verticais disponíveis
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (lines[i][j].getCanClick()) {
+                    availableLines.add(lines[i][j]);
+                }
+            }
+        }
+
+        // Adiciona linhas horizontais disponíveis
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (horizontalLines[i][j].getCanClick()) {
+                    availableLines.add(horizontalLines[i][j]);
+                }
+            }
+        }
+
+        return availableLines;
+    }
+
+    private void computerPlay() {
+        ArrayList<Line> availableLines = getAvailableLines();
+
+        if (!availableLines.isEmpty()) {
+            // Escolhe uma linha aleatória
+            Random random = new Random();
+            Line chosenLine = availableLines.get(random.nextInt(availableLines.size()));
+
+            // Marca a linha como selecionada
+            chosenLine.setCanClick(false);
+            chosenLine.setClicked(true);
+            chosenLine.setColor(Color.RED); // Usa uma cor diferente para a CPU
+            computerPlayer.setCanPlay(false);
+            humanPlayer.setCanPlay(true);
+        }
+    }
+
     private void linesGetClicked() {
         if (Gdx.input.justTouched()) {
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 5; j++) {
-                    Line vertical = lines[i][j];
-                    if (vertical.getCanClick() && vertical.isClicked(getMouseInputX(), getMouseInputY())) {
-                        vertical.setCanClick(false);
-                        vertical.setColor(Color.BLUE);
-                        return;
-                    }
-                }
+            if (humanPlayer.getCanPlay()) {
+                verifyLines();
             }
+        }
 
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 6; j++) {
-                    Line horizontal = horizontalLines[i][j];
-                    if (horizontal.getCanClick() && horizontal.isClicked(getMouseInputX(), getMouseInputY())) {
-                        horizontal.setCanClick(false);
-                        horizontal.setColor(Color.BLUE);
-                        return;
-                    }
-                }
-            }
+        if (computerPlayer.getCanPlay()) {
+            computerPlay();
         }
     }
 
@@ -142,23 +207,23 @@ public class Map {
         }
     }
 
-    private void updateSquares(){
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
+    private void updateSquares() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
                 squares[i][j].updateSquare();
             }
         }
 
     }
 
-    private void renderSquares(){
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
+    private void renderSquares() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
                 squares[i][j].render(shape);
             }
         }
     }
-    
+
     private void disposeDots() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
@@ -166,7 +231,7 @@ public class Map {
             }
         }
     }
-    
+
     private void disposeLines() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {

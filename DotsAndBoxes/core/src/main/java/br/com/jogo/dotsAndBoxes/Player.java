@@ -32,7 +32,7 @@ public class Player {
         return canPlay;
     }
 
-    public void sumPoints(){
+    public void addPoints(){
         points += 1;
     }
 }
