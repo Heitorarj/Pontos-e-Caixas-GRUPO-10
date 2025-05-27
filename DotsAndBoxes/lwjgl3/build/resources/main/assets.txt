@@ -1,1 +1,3 @@
+Roboto-Regular.ttf
+cores.txt
 libgdx.png
