@@ -79,10 +79,6 @@ public class Main extends ApplicationAdapter {
             menuFinal.createMenuFinal(map);
             menuFinal.updateMenuFinal(map, menu);
             menuFinal.renderMenuFinal(batch);
-            // if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
-            //     map.resetMap();
-            //     menu.setInMenu(true);
-            // }
         }
     }
 

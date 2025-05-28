@@ -35,7 +35,7 @@ public class Line extends Elements {
         shape.begin(ShapeType.Filled);
 
         if (isHovered && canClick) {
-            shape.setColor(Color.SKY); // cor de destaque ao passar o mouse
+            shape.setColor(Color.SKY);
         } else {
             shape.setColor(color);
         }
@@ -133,9 +133,9 @@ public class Line extends Elements {
         return new float[] { closestX, closestY };
     }
 
-    private float calculateDistance(float x1, float y1, float x2, float y2) {
-        float deltaX = x1 - x2;
-        float deltaY = y1 - y2;
+    private float calculateDistance(float positionX1, float positionY1, float positionX2, float positionY2) {
+        float deltaX = positionX1 - positionX2;
+        float deltaY = positionY1 - positionY2;
         return (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 

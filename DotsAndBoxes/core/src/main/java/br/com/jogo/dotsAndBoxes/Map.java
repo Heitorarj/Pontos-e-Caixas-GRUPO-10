@@ -131,7 +131,6 @@ public class Map {
     private ArrayList<Line> getAvailableLines() {
         ArrayList<Line> availableLines = new ArrayList<>();
 
-        // Adiciona linhas verticais disponíveis
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 if (lines[i][j].getCanClick()) {
@@ -140,7 +139,6 @@ public class Map {
             }
         }
 
-        // Adiciona linhas horizontais disponíveis
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 6; j++) {
                 if (horizontalLines[i][j].getCanClick()) {
@@ -156,11 +154,9 @@ public class Map {
         ArrayList<Line> availableLines = getAvailableLines();
 
         if (!availableLines.isEmpty()) {
-            // Escolhe uma linha aleatória
             Random random = new Random();
             Line chosenLine = availableLines.get(random.nextInt(availableLines.size()));
 
-            // Marca a linha como selecionada
             chosenLine.setCanClick(false);
             chosenLine.setClicked(true);
             chosenLine.setColor(Color.RED); // Usa uma cor diferente para a CPU
@@ -195,10 +191,8 @@ public class Map {
 
     public boolean isGameOver(){
         if (getAvailableLines().isEmpty()) {
-            // Se não houver mais linhas disponíveis, o jogo acabou
             return true;
         } else {
-            // Caso contrário, o jogo continua
             return false;
         }
     }
@@ -209,7 +203,7 @@ public class Map {
         } else if (computerPlayer.getPoints() > humanPlayer.getPoints()) {
             return computerPlayer.getId();
         } else {
-            return 0; // Empate
+            return 0;
         }
 
     }
