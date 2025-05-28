@@ -39,7 +39,7 @@ public class Map {
     private void createDots() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
-                dots[i][j].createDot(215f + (i * 70), 150f + (j * 50f), 5f);
+                dots[i][j].createDot(215f + (i * 70), 150f + (j * 50f), 10f);
             }
         }
     }
@@ -63,13 +63,10 @@ public class Map {
     private void createSquares() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                // Linhas horizontais (top e bottom)
-                Line top = horizontalLines[i][j + 1]; // Linha acima do quadrado
-                Line bottom = horizontalLines[i][j]; // Linha abaixo do quadrado
-
-                // Linhas verticais (left e right)
-                Line left = lines[i][j]; // Linha à esquerda do quadrado
-                Line right = lines[i + 1][j]; // Linha à direita do quadrado
+                Line top = horizontalLines[i][j + 1];
+                Line bottom = horizontalLines[i][j];
+                Line left = lines[i][j];
+                Line right = lines[i + 1][j];
 
                 squares[i][j] = new Square(top, bottom, left, right);
             }
@@ -101,16 +98,16 @@ public class Map {
         }
     }
 
-    private void verifyLines() {
+    private void verifyLinesClicked() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 Line vertical = lines[i][j];
                 if (vertical.getCanClick() && vertical.isClicked(getMouseInputX(), getMouseInputY())) {
                     vertical.setCanClick(false);
-                    vertical.setClicked(true);
                     vertical.setColor(Color.BLUE);
-                    humanPlayer.setCanPlay(false);
-                    computerPlayer.setCanPlay(true);
+                    vertical.setClicked(true);
+                    updateSquares();
+                    verifyTurn(humanPlayer, computerPlayer);
                     return;
                 }
             }
@@ -121,15 +118,14 @@ public class Map {
                 Line horizontal = horizontalLines[i][j];
                 if (horizontal.getCanClick() && horizontal.isClicked(getMouseInputX(), getMouseInputY())) {
                     horizontal.setCanClick(false);
-                    horizontal.setClicked(true);
                     horizontal.setColor(Color.BLUE);
-                    humanPlayer.setCanPlay(false);
-                    computerPlayer.setCanPlay(true);
+                    horizontal.setClicked(true);
+                    updateSquares();
+                    verifyTurn(humanPlayer, computerPlayer);
                     return;
                 }
             }
         }
-
     }
 
     private ArrayList<Line> getAvailableLines() {
@@ -168,21 +164,54 @@ public class Map {
             chosenLine.setCanClick(false);
             chosenLine.setClicked(true);
             chosenLine.setColor(Color.RED); // Usa uma cor diferente para a CPU
-            computerPlayer.setCanPlay(false);
-            humanPlayer.setCanPlay(true);
+            updateSquares();
+            verifyTurn(computerPlayer, humanPlayer);
+        }
+    }
+
+    private void verifyTurn(Player currentPlayer, Player opponentPlayer) {
+        if (currentPlayer.getScored()) {
+            currentPlayer.setCanPlay(true);
+            opponentPlayer.setCanPlay(false);
+        } else {
+            currentPlayer.setCanPlay(false);
+            opponentPlayer.setCanPlay(true);
         }
     }
 
     private void linesGetClicked() {
-        if (Gdx.input.justTouched()) {
-            if (humanPlayer.getCanPlay()) {
-                verifyLines();
-            }
+        if (Gdx.input.justTouched() && humanPlayer.getCanPlay()) {
+            verifyLinesClicked();
+        }
+    }
+
+    public int getHumanPlayerPoints() {
+        return humanPlayer.getPoints();
+    }
+
+    public int getComputerPlayerPoints() {
+        return computerPlayer.getPoints();
+    }
+
+    public boolean isGameOver(){
+        if (getAvailableLines().isEmpty()) {
+            // Se não houver mais linhas disponíveis, o jogo acabou
+            return true;
+        } else {
+            // Caso contrário, o jogo continua
+            return false;
+        }
+    }
+
+    public int getWinnerId(){
+        if (humanPlayer.getPoints() > computerPlayer.getPoints()) {
+            return humanPlayer.getId();
+        } else if (computerPlayer.getPoints() > humanPlayer.getPoints()) {
+            return computerPlayer.getId();
+        } else {
+            return 0; // Empate
         }
 
-        if (computerPlayer.getCanPlay()) {
-            computerPlay();
-        }
     }
 
     private void renderDots() {
@@ -210,7 +239,7 @@ public class Map {
     private void updateSquares() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                squares[i][j].updateSquare();
+                squares[i][j].updateSquare(humanPlayer, computerPlayer);
             }
         }
 
@@ -245,6 +274,16 @@ public class Map {
         }
     }
 
+    public void resetMap() {
+        inicializeDots();
+        inicializeLines();
+        createDots();
+        createLines();
+        createSquares();
+        humanPlayer.resetPlayer(humanPlayer.getId(), true);
+        computerPlayer.resetPlayer(computerPlayer.getId(), false);
+    }
+
     public Map() {
         inicializeDots();
         inicializeLines();
@@ -259,7 +298,12 @@ public class Map {
     public void updateMap() {
         linesAreHovered();
         linesGetClicked();
+        if (computerPlayer.getCanPlay()) {
+            computerPlay();
+        }
         updateSquares();
+        humanPlayer.setScored(false);
+        computerPlayer.setScored(false);
     }
 
     public void renderMap() {
