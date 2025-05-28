@@ -32,7 +32,7 @@ public class Line extends Elements {
     }
 
     public void renderLine() {
-        shape.begin(ShapeType.Line);
+        shape.begin(ShapeType.Filled);
 
         if (isHovered && canClick) {
             shape.setColor(Color.SKY); // cor de destaque ao passar o mouse
@@ -40,7 +40,7 @@ public class Line extends Elements {
             shape.setColor(color);
         }
 
-        shape.line(keepPositionX, keepPositionY, getPositionX(), getPositionY());
+        shape.rectLine(keepPositionX, keepPositionY, getPositionX(), getPositionY(), 5f);
         shape.end();
     }
 

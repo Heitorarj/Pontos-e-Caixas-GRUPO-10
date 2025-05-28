@@ -27,9 +27,9 @@ public class Menu {
         this.title = "Dots And Boxes";
         this.startText = "Pressione Enter para iniciar o jogo";
         this.titleX = 100f;
-        this.titleY = 300f;
+        this.titleY = 400f;
         this.startTextX = 100f;
-        this.startTextY = 250f;
+        this.startTextY = 200f;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Roboto-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -38,7 +38,8 @@ public class Menu {
         generator.dispose();
     }
 
-    public void updateMenu() {
+    public void updateMenu(MenuFinal menuFinal) {
+        menuFinal.setInMenuFinal(true);
         if (inMenu && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             inMenu = false;
         }
@@ -48,12 +49,16 @@ public class Menu {
         if (inMenu) {
             batch.begin();
             font.setColor(Color.BROWN);
-            font.getData().setScale(2);
+            font.getData().setScale(3f);
             font.draw(batch, title, titleX, titleY);
-            font.getData().setScale(1);
+            font.getData().setScale(1f);
             font.draw(batch, startText, startTextX, startTextY);
             batch.end();
         }
+    }
+
+    public void setInMenu(boolean inMenu) {
+        this.inMenu = inMenu;
     }
 
     public boolean isInMenu() {
