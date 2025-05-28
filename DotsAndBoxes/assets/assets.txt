@@ -1,3 +1,2 @@
+Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav
 Roboto-Regular.ttf
-cores.txt
-libgdx.png
