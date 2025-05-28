@@ -15,6 +15,7 @@ public class Main extends ApplicationAdapter {
     private Menu menu;
     private MenuFinal menuFinal;
     private BitmapFont font;
+    private boolean menuFinalCreated = false;
     private Music music;
 
     private void createMusic() {
@@ -34,6 +35,7 @@ public class Main extends ApplicationAdapter {
         menuFinal = new MenuFinal();
         font = new BitmapFont();
         createMusic();
+        initializeFont();
     }
 
     private void initializeFont() {
@@ -48,7 +50,6 @@ public class Main extends ApplicationAdapter {
     }
 
     private void showPoints(){
-        initializeFont();
         float humanPointsX = 50f;
         float humanPointsY = 500f;
         float computerPointsX = 450f;
@@ -76,7 +77,10 @@ public class Main extends ApplicationAdapter {
             showPoints();
             batch.end();
         } else if (map.isGameOver()) {
-            menuFinal.createMenuFinal(map);
+            if (!menuFinalCreated) {
+                menuFinal.createMenuFinal(map);
+                menuFinalCreated = true;
+            }
             menuFinal.updateMenuFinal(map, menu);
             menuFinal.renderMenuFinal(batch);
         }
@@ -86,7 +90,9 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         menu.disposeMenu();
+        menuFinal.disposeMenuFinal();
         map.disposeMap();
+        music.dispose();
     }
 
 }
